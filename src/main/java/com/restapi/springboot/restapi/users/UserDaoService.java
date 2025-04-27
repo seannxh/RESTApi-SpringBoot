@@ -20,15 +20,22 @@ public class UserDaoService {
     //userdaoservice -> create a static lists
 
     private static List<User> users = new ArrayList<>(); // My fake init db
+    private static int usersCount = 0;
 
     static { // initializes the Database with this specific information
-        users.add(new User(1, "Sean", LocalDate.now().minusYears(30)));
-        users.add(new User(2, "Mar", LocalDate.now().minusYears(25)));
-        users.add(new User(2, "Louie", LocalDate.now().minusYears(20)));
+        users.add(new User(++usersCount, "Sean", LocalDate.now().minusYears(30)));
+        users.add(new User(++usersCount, "Mar", LocalDate.now().minusYears(25)));
+        users.add(new User(++usersCount, "Louie", LocalDate.now().minusYears(20)));
     }
 
     public List<User> findAll(){
         return users;
+    }
+
+    public User save(User user){
+        user.setId(++usersCount);
+        users.add(user);
+        return user;
     }
 
     public User findOne(int id) {
