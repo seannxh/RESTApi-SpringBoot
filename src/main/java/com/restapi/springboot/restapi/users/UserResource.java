@@ -37,6 +37,11 @@ public class UserResource {
 
     @GetMapping(path = "/users/{id}")
     public User retrieveUser(@PathVariable int id){
+        User user = service.findOne(id);
+
+        if(user == null){
+            throw new UserNotFoundException("id" + id);
+        }
         return service.findOne(id);
     }
 
