@@ -31,13 +31,13 @@ public class UserResource {
     }
 
     @GetMapping(path = "/users")
-    public List<User> retrieveAllUsers(){
+    public List<UserModel> retrieveAllUsers(){
         return service.findAll();
     }
 
     @GetMapping(path = "/users/{id}")
-    public User retrieveUser(@PathVariable int id){
-        User user = service.findOne(id);
+    public UserModel retrieveUser(@PathVariable int id){
+        UserModel user = service.findOne(id);
 
         if(user == null){
             throw new UserNotFoundException("id" + id);
@@ -45,9 +45,14 @@ public class UserResource {
         return service.findOne(id);
     }
 
+    @DeleteMapping(path = "/users/delete/{id}")
+    public void deleteUser(@PathVariable int id){
+        service.deleteOne(id);
+    }
+
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody User user){
-        User saveUser = service.save(user);
+    public ResponseEntity<UserModel> createUser(@RequestBody UserModel user){
+        UserModel saveUser = service.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(saveUser.getId())

@@ -2,7 +2,7 @@ package com.restapi.springboot.restapi.users;
 
 import java.time.LocalDate;
 
-public class User {
+public class UserModel {
 
     private Integer id;
 
@@ -32,7 +32,7 @@ public class User {
         this.birthDate = birthDate;
     }
 
-    public User(Integer id, String name, LocalDate birthDate) {
+    public UserModel(Integer id, String name, LocalDate birthDate) {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
