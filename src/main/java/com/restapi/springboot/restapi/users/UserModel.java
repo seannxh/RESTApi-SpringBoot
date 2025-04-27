@@ -3,8 +3,8 @@ package com.restapi.springboot.restapi.users;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
-import java.time.LocalDate;
 
+import java.time.LocalDate;
 public class UserModel {
 
     private Integer id;
