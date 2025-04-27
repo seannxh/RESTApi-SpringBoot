@@ -2,6 +2,8 @@ package com.restapi.springboot.restapi.users;
 
 
 import jakarta.validation.Valid;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 //Resource Not Found = 404
 // Server Exception = 500
@@ -36,15 +41,21 @@ public class UserResource {
     public List<UserModel> retrieveAllUsers(){
         return service.findAll();
     }
-
+    //Entitity Model
+    //Web MvC Link Builder
     @GetMapping(path = "/users/{id}")
-    public UserModel retrieveUser(@PathVariable int id){
+    public EntityModel<UserModel> retrieveUser(@PathVariable int id){
         UserModel user = service.findOne(id);
 
         if(user == null){
             throw new UserNotFoundException("id" + id);
         }
-        return service.findOne(id);
+        EntityModel<UserModel> entityModel = EntityModel.of(user);
+
+        //Adding liks
+        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+        entityModel.add(link.withRel("all-users"));
+        return entityModel;
     }
 
     @DeleteMapping(path = "/users/delete/{id}")
