@@ -1,7 +1,9 @@
 package com.restapi.springboot.restapi.users;
 
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -50,8 +52,10 @@ public class UserResource {
         service.deleteOne(id);
     }
 
+    //When i use @Valid annotation when binding happens validation which are defined are auto invoked.
+    //After go create validation logic in the model bean
     @PostMapping("/users")
-    public ResponseEntity<UserModel> createUser(@RequestBody UserModel user){
+    public ResponseEntity<UserModel> createUser(@Valid @RequestBody UserModel user){
         UserModel saveUser = service.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")

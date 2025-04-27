@@ -1,13 +1,17 @@
 package com.restapi.springboot.restapi.users;
 
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 
 public class UserModel {
 
     private Integer id;
 
+    @Size(min=2, message = "Name Should have ATLEAST 2 characters.")
     private String name;
-
+    @Past(message = "Birth Date Should be in the past")
     private LocalDate birthDate;
     public Integer getId() {
         return id;
