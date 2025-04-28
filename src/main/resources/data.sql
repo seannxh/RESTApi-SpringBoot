@@ -14,3 +14,5 @@ insert into post_entity(id, user_id, description)
 values(20, 2, 'Learning AWS');
 
 
+
+
