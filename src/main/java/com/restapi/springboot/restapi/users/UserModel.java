@@ -1,14 +1,17 @@
 package com.restapi.springboot.restapi.users;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity(name = "user_details")
 public class UserModel {
@@ -26,12 +29,25 @@ public class UserModel {
     @Past(message = "Birth Date Should be in the past")
     @JsonProperty("birth_date")
     private LocalDate birthDate;
+    //User can have many posts aka OneToMany Relationship
+    @OneToMany(mappedBy =  "user")
+    @JsonIgnore//We don't want it to be a part of Json Request
+    private List<PostEntity> posts;
+
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public List<PostEntity> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<PostEntity> posts) {
+        this.posts = posts;
     }
 
     public String getName() {

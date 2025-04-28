@@ -1,6 +1,7 @@
 package com.restapi.springboot.restapi.users;
 
 
+import com.restapi.springboot.restapi.repository.PostRepository;
 import com.restapi.springboot.restapi.repository.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.hateoas.EntityModel;
@@ -33,9 +34,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RestController
 public class UserJPAResource {
     private UserRepository repository;
+    private PostRepository postRepository;
 
-    public UserJPAResource(UserRepository repository) {
+
+    public UserJPAResource(UserRepository repository, PostRepository postRepository) {
         this.repository = repository;
+        this.postRepository = postRepository;
     }
 
     @GetMapping(path = "/jpa/users")
@@ -72,6 +76,30 @@ public class UserJPAResource {
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(saveUser.getId())
+                .toUri();
+        return ResponseEntity.created(location).build();
+    }
+    @GetMapping(path = "/jpa/users/get/{id}/posts")
+    public List<PostEntity> retrievePostsForUser(@PathVariable int id){
+        Optional<UserModel> user = repository.findById(id);
+
+        if(user.isEmpty()){
+            throw new UserNotFoundException("id" + id);
+        }
+        return user.get().getPosts();
+    }
+    @PostMapping(path = "/jpa/users/post/{id}/posts")
+    public ResponseEntity<PostEntity> createPostForUser(@PathVariable int id, @Valid @RequestBody PostEntity post){
+        Optional<UserModel> user = repository.findById(id);
+
+        if(user.isEmpty()){
+            throw new UserNotFoundException("id" + id);
+        }
+        post.setUser(user.get());
+        PostEntity savedPost = postRepository.save(post);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedPost.getId())
                 .toUri();
         return ResponseEntity.created(location).build();
     }
