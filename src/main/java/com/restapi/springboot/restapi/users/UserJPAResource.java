@@ -33,24 +33,24 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 //ResponseEntity makes error handling a lot easier by showing more indepth error code when testing the API
 @RestController
 public class UserJPAResource {
-    private UserRepository repository;
+    private UserRepository userRepository;
     private PostRepository postRepository;
 
 
-    public UserJPAResource(UserRepository repository, PostRepository postRepository) {
-        this.repository = repository;
+    public UserJPAResource(UserRepository userRepository, PostRepository postRepository) {
+        this.userRepository = userRepository;
         this.postRepository = postRepository;
     }
 
     @GetMapping(path = "/jpa/users")
     public List<UserModel> retrieveAllUsers(){
-        return repository.findAll();
+        return userRepository.findAll();
     }
     //Entitity Model
     //Web MvC Link Builder
     @GetMapping(path = "/jpa/users/{id}")
     public EntityModel<UserModel> retrieveUser(@PathVariable int id){
-        Optional<UserModel> user = repository.findById(id);
+        Optional<UserModel> user = userRepository.findById(id);
 
         if(user.isEmpty()){
             throw new UserNotFoundException("id" + id);
@@ -65,14 +65,14 @@ public class UserJPAResource {
 
     @DeleteMapping(path = "/jpa/users/delete/{id}")
     public void deleteUser(@PathVariable int id){
-        repository.deleteById(id);
+        userRepository.deleteById(id);
     }
 
     //When i use @Valid annotation when binding happens validation which are defined are auto invoked.
     //After go create validation logic in the model bean
     @PostMapping("/jpa/users")
     public ResponseEntity<UserModel> createUser(@Valid @RequestBody UserModel user){
-        UserModel saveUser = repository.save(user);
+        UserModel saveUser = userRepository.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(saveUser.getId())
@@ -81,7 +81,7 @@ public class UserJPAResource {
     }
     @GetMapping(path = "/jpa/users/get/{id}/posts")
     public List<PostEntity> retrievePostsForUser(@PathVariable int id){
-        Optional<UserModel> user = repository.findById(id);
+        Optional<UserModel> user = userRepository.findById(id);
 
         if(user.isEmpty()){
             throw new UserNotFoundException("id" + id);
@@ -90,7 +90,7 @@ public class UserJPAResource {
     }
     @PostMapping(path = "/jpa/users/post/{id}/posts")
     public ResponseEntity<PostEntity> createPostForUser(@PathVariable int id, @Valid @RequestBody PostEntity post){
-        Optional<UserModel> user = repository.findById(id);
+        Optional<UserModel> user = userRepository.findById(id);
 
         if(user.isEmpty()){
             throw new UserNotFoundException("id" + id);
