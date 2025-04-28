@@ -1,13 +1,19 @@
 package com.restapi.springboot.restapi.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 
 import java.time.LocalDate;
-public class UserModel {
 
+@Entity(name = "user_details")
+public class UserModel {
+    @Id
+    @GeneratedValue
     private Integer id;
 
     @Size(min=2, message = "Name Should have ATLEAST 2 characters.")
